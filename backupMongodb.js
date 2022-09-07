@@ -6,9 +6,8 @@ const fs = require("fs");
 const ws = fs.createWriteStream("nameyourwritestreamhere.csv");
 const nodemailer = require("nodemailer");
 
-// every 12 hours
-cron.schedule("* 12 * * *", function () {
-  console.log("running a task every 12 hours");
+cron.schedule("30 15 * * *", function () {
+  console.log("running a task every day at 3:30 hours");
 
   // let url = "mongodb://username:password@localhost:27017/";
 
@@ -21,8 +20,8 @@ cron.schedule("* 12 * * *", function () {
       (err, client) => {
         if (err) throw err;
         client
-          .db(process.env.db)
-          .collection(process.db.collection)
+          .db('db')
+          .collection('collection')
           // find all records
           .find({})
           .toArray((err, data) => {
@@ -88,10 +87,11 @@ cron.schedule("* 12 * * *", function () {
                 );
               }
               main().catch(console.error);
-            });
+            })
+            .pipe(ws);
+            client.close();
           });
       }
     )
-    .pipe(ws);
-  client.close();
+   
 });
